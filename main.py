@@ -1,7 +1,13 @@
 import time
+import shop_api
+import sort_products
 
 
 def main():
+    product_ids, products_price = shop_api.main()
+    print(product_ids, products_price)
+    products_list = sort_products.main(product_ids, products_price)
+    sort_products.sortby_totalprice_desc(products_list)
     pass
 
 
