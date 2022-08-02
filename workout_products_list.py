@@ -22,11 +22,7 @@ def sortby_totalprice_desc(products_list):
     return sorted(products_list, key=lambda product: product['totalprice'], reverse=True)
 
 
-def main(product_ids, products_price):
-    # path1 = 'product_ids.txt'
-    # path2 = 'products_price.txt'
-    # product_ids = read_product_ids(path1)
-    # products_price = read_product_ids(path2)['products']
+def get_products_list(product_ids, products_price):
     products_list = []
     for item in product_ids:
         item_count = product_ids[item]['quantity']
@@ -45,5 +41,14 @@ def main(product_ids, products_price):
     return products_list
 
 
+def main():
+    path1 = 'product_ids.txt'
+    path2 = 'products_price.txt'
+    product_ids = read_product_ids(path1)
+    products_price = read_product_ids(path2)['products']
+    get_products_list(product_ids, products_price)
+
+
 if __name__ == '__main__':
     main()
+

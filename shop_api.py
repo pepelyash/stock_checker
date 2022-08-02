@@ -1,18 +1,16 @@
 import requests
 from requests.exceptions import HTTPError
+import os
 
 
 def get_access_token(session):
     url = 'https://api.samokat.ru/showcase/oauth/token'
-    refresh_token = '49134d2d6601e5a52d325127322757a522755d77292e8dbf2a46104426cd4ca5'
-    data = f'grant_type=refresh_token&refresh_token={refresh_token}'  # copy-paste refresh_token from opened app
-    deviceid = 'db24b4f9760fc4ea'
-    app_ver = '3.56.0'
+    data = f'grant_type=refresh_token&refresh_token={os.getenv("refresh_token")}'
     headers = {
         'accept': 'application/json, text/plain, */*',
-        'deviceid': deviceid,
+        'deviceid': os.getenv('deviceid'),
         'x-application-platform': 'android',
-        'x-application-version': app_ver,
+        'x-application-version': os.getenv('app_ver'),
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': '103',
         'Host': 'api.samokat.ru',
@@ -35,7 +33,6 @@ def get_access_token(session):
 
 
 def get_product_ids(session, access_token):
-    url = 'https://api.samokat.ru/showcase/showcases/de1c674b-ddda-4485-9b7c-e13f5e901088/stocks'
     authorization = f'Bearer {access_token}'
     # print(authorization)
     headers = {
@@ -52,7 +49,7 @@ def get_product_ids(session, access_token):
     }
     data = '[]'
     try:
-        response = session.post(url=url, headers=headers, data=data, timeout=10)
+        response = session.post(url=os.getenv('product_ids_url'), headers=headers, data=data, timeout=10)
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
@@ -63,7 +60,6 @@ def get_product_ids(session, access_token):
 
 
 def get_products_price(session, access_token):
-    url = 'https://api.samokat.ru/showcase/showcases/de1c674b-ddda-4485-9b7c-e13f5e901088?version=0'
     authorization = f'Bearer {access_token}'
     headers = {
         'accept': 'application/json, text/plain, */*',
@@ -78,7 +74,7 @@ def get_products_price(session, access_token):
     }
     data = ''
     try:
-        response = session.get(url=url, headers=headers, data=data, timeout=10)
+        response = session.get(url=os.getenv('products_price_url'), headers=headers, data=data, timeout=10)
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
