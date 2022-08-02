@@ -38,6 +38,7 @@ def get_products_list(product_ids, products_price):
             }
             products_list.append(new_item)
     save_json(products_list)
+    # hah?
     return products_list
 
 
