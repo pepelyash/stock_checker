@@ -1,4 +1,3 @@
-import os
 import time
 import requests
 from requests.exceptions import HTTPError
@@ -28,7 +27,7 @@ class ShopApi:
                 with open('tkn_exptime.txt', mode='w', encoding='utf8') as file:
                     file.write(f'{self.access_token_expiration}')
         else:
-            print(f'wait {int(time.time()) - self.access_token_expiration}s before refreshing products list')
+            raise Exception(f'wait {int(time.time()) - self.access_token_expiration}s before refreshing products list')
 
     def is_needtorefresh_access_token(self):
         # read access token expiration time from file
@@ -94,12 +93,14 @@ class ShopApi:
             response.raise_for_status()
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
+            print('failed to get_products_ids')
         except Exception as err:
             print(f'Other error occurred: {err}')
+            print('failed to get_products_ids')
         else:
             return response.json()
 
-    def get_products_prices(self, url):
+    def get_products_info(self, url):
         headers = {
             'accept': 'application/json, text/plain, */*',
             'authorization': f'Bearer {self.access_token}',
@@ -117,26 +118,9 @@ class ShopApi:
             response.raise_for_status()
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
+            print('failed to get_products_info')
         except Exception as err:
             print(f'Other error occurred: {err}')
+            print('failed to get_products_info')
         else:
             return response.json()['products']
-
-
-from dotenv import load_dotenv
-
-
-def main():
-    load_dotenv()   # load environment variables from .env file
-    new_req = ShopApi(os.getenv('deviceid'), os.getenv('app_ver'), os.getenv('refresh_token'))
-    ids = new_req.get_products_ids(os.getenv('products_ids_url'))
-    print(ids)
-    prices = new_req.get_products_prices(os.getenv('products_prices_url'))
-    print(prices)
-    pass
-
-
-if __name__ == '__main__':
-    main()
-
-
