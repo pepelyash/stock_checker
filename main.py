@@ -1,14 +1,19 @@
 import time
 from dotenv import load_dotenv
-import shop_api
-import workout_products_list
+import os
+from api import ShopApi
+
+
+def get_products_list():
+    new_request = ShopApi(os.getenv('deviceid'), os.getenv('app_ver'), os.getenv('refresh_token'))
+    ids = new_request.get_products_ids(os.getenv('products_ids_url'))
+    print(ids)
+    prices = new_request.get_products_prices(os.getenv('products_prices_url'))
+    print(prices)
 
 
 def main():
-    product_ids, products_price = shop_api.main()
-    print(product_ids, products_price)
-    products_list = workout_products_list.get_products_list(product_ids, products_price)
-    workout_products_list.sortby_totalprice_desc(products_list)
+    get_products_list()
     pass
 
 
